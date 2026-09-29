@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy | Your Plan{% endblock %}
+{% block content %}
+<section class="result-header"><div><div class="eyebrow">YOUR PERSONALIZED PLAN</div><h1>Hey {{ user.name }} 👋</h1><p>{{ message }}</p></div><a class="secondary-btn" href="/">← New plan</a></section>
+{% if "Demo mode" in message %}<div class="alert warning">{{ message }}</div>{% endif %}
+<section class="profile-grid">
+{% for label,value in [("Name",user.name),("User ID",user.user_id),("Age",user.age),("Weight",user.weight ~ " kg"),("Goal",user.goal|title),("Intensity",user.intensity|title),("Experience",user.experience_level|title),("Training days",user.days_per_week ~ "/week")] %}<div class="profile-item"><span>{{label}}</span><strong>{{value}}</strong></div>{% endfor %}
+</section>
+<section class="plan-section"><div class="section-title"><div><div class="eyebrow">7-DAY ROUTINE</div><h2>{{ plan.title }}</h2></div><span class="status-pill">AI PLAN</span></div><div class="overview">{{ plan.overview }}</div>
+<div class="day-grid">{% for day in plan.days %}<article class="day-card {% if 'Recovery' in day.focus or 'Rest' in day.focus %}rest-day{% endif %}"><div class="day-top"><span class="day-number">{{ "%02d"|format(loop.index) }}</span><div><h3>{{day.day}}</h3><span class="focus">{{day.focus}}</span></div></div>{% if day.warm_up %}<div class="plan-block"><h4>🔥 Warm-up</h4><ul>{% for x in day.warm_up %}<li>{{x}}</li>{% endfor %}</ul></div>{% endif %}<div class="plan-block"><h4>💪 Main workout</h4><ul>{% for x in day.exercises %}<li>{{x}}</li>{% endfor %}</ul></div>{% if day.cooldown %}<div class="plan-block"><h4>🧘 Cooldown</h4><ul>{% for x in day.cooldown %}<li>{{x}}</li>{% endfor %}</ul></div>{% endif %}{% if day.rest_note %}<p class="rest-note">{{day.rest_note}}</p>{% endif %}</article>{% endfor %}</div>
+<div class="safety-note">⚠️ {{ plan.safety_note }}</div></section>
+<section class="nutrition-card"><div class="nutrition-icon">🥗</div><div><div class="eyebrow">NUTRITION & RECOVERY</div><h2>Small habits, consistent results.</h2><p><strong>Tip:</strong> {{nutrition.tip}}</p><p><strong>Hydration:</strong> {{nutrition.hydration}}</p><p><strong>Recovery:</strong> {{nutrition.recovery}}</p></div></section>
+<section class="feedback-section"><div class="section-title"><div><div class="eyebrow">FEEDBACK LOOP</div><h2>Make the plan fit you better.</h2><p>Ask for changes such as “add more cardio” or “include an extra rest day.”</p></div><span class="icon-badge">🔄</span></div><form action="/submit-feedback" method="post" class="feedback-form"><input type="hidden" name="user_id" value="{{user.user_id}}"><textarea name="feedback" rows="4" maxlength="2000" placeholder="Tell FitBuddy what you want to change..." required></textarea><button class="primary-btn" type="submit">Update My Plan →</button></form></section>
+{% endblock %}

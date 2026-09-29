@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy | All Users{% endblock %}
+{% block content %}
+<section class="result-header"><div><div class="eyebrow">ADMIN / COACH VIEW</div><h1>All users & workout plans</h1><p>Review stored user profiles and compare original versus updated plans.</p></div><a class="secondary-btn" href="/">+ New user</a></section>
+<div class="table-wrap"><table><thead><tr><th>User ID</th><th>Name</th><th>Age</th><th>Weight</th><th>Goal</th><th>Intensity</th><th>Experience</th><th>Days</th><th>Original Plan</th><th>Updated Plan</th></tr></thead><tbody>
+{% for user in users %}{% set plan = plans_by_user.get(user.user_id) %}<tr><td><strong>{{user.user_id}}</strong></td><td>{{user.name}}</td><td>{{user.age}}</td><td>{{user.weight}} kg</td><td>{{user.goal|title}}</td><td>{{user.intensity|title}}</td><td>{{user.experience_level|title}}</td><td>{{user.days_per_week}}</td><td>{% if plan %}<details><summary>View plan</summary><pre>{{plan.original_plan}}</pre></details>{% else %}—{% endif %}</td><td>{% if plan and plan.updated_plan %}<details><summary>View update</summary><pre>{{plan.updated_plan}}</pre></details>{% else %}<span class="muted">Not updated</span>{% endif %}</td></tr>{% else %}<tr><td colspan="10" class="empty-state">No users yet. Generate your first plan from the home page.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}
